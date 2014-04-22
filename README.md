@@ -146,7 +146,7 @@ We pass a constant value of +1 into the "widthGain" node.  This means that whate
 
 ##Using the new oscillator node
 The new oscillator is demonstrated in the following examples:
-* [Example-pwm.html](http://htmlpreview.github.com/?https://github.com/pendragon-andyh/WebAudio-PulseOscillator/blob/master/example-pwn.html)
+* [Example-pwm.html](http://htmlpreview.github.com/?https://github.com/pendragon-andyh/WebAudio-PulseOscillator/blob/master/example-pwm.html)
 * [Example-synth.html](http://htmlpreview.github.com/?https://github.com/pendragon-andyh/WebAudio-PulseOscillator/blob/master/example-synth.html)
 
 Have a play - then feel free to incorporate these techniques in your own code.
