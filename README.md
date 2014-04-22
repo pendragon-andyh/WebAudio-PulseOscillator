@@ -4,6 +4,10 @@
 Many classic analogue synthesiser lead-synth and string-ensemble sounds were based upon a modulated "pulse" waveform.
 This project demonstrates a set of techniques for recreating a Pulse Wave using the Web Audio API.
 
+The new oscillator is demonstrated in the following examples:
+* [Example-pwm.html](http://htmlpreview.github.com/?https://github.com/pendragon-andyh/WebAudio-PulseOscillator/blob/master/example-pwm.html)
+* [Example-synth.html](http://htmlpreview.github.com/?https://github.com/pendragon-andyh/WebAudio-PulseOscillator/blob/master/example-synth.html)
+
 The pulse wave is similar to a normal "square" waveform (figure 1)
 ![PulseWaveFigure1.gif](./assets/PulseWaveFigure1.gif "Figure 1: Normal square wave")
 
@@ -143,11 +147,6 @@ ac.createPulseOscillator=function(){
 ```
 
 We pass a constant value of +1 into the "widthGain" node.  This means that whatever we do to its "gain" parameter will be reflected onto the node’s output.  We attach the "gain" parameter to the oscillator node so that it becomes part of the oscillator’s interface.
-
-##Using the new oscillator node
-The new oscillator is demonstrated in the following examples:
-* [Example-pwm.html](http://htmlpreview.github.com/?https://github.com/pendragon-andyh/WebAudio-PulseOscillator/blob/master/example-pwm.html)
-* [Example-synth.html](http://htmlpreview.github.com/?https://github.com/pendragon-andyh/WebAudio-PulseOscillator/blob/master/example-synth.html)
 
 Have a play - then feel free to incorporate these techniques in your own code.
 
