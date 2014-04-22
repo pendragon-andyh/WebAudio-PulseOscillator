@@ -79,6 +79,7 @@ constantShaper.connect(pulseShaper);
 ```
 
 The WaveShaper node will transform this into an output where a quarter of the output values are -1, and the remaining three quarters are +1.
+
 ![PulseWaveFigure5.gif](./assets/PulseWaveFigure5.gif "Figure 5: Pulse wave when the offset is 0.5")
 
 This is cool, but the resulting sound is a bit static.  It would be better if we use an AudioParam to modulate the pulse-width.
@@ -145,8 +146,8 @@ We pass a constant value of +1 into the "widthGain" node.  This means that whate
 
 ##Using the new oscillator node
 The new oscillator is demonstrated in the following examples:
-* [Example-pwm.html](##here)
-* [Example-synth.html](##here)
+* [Example-pwm.html](http://htmlpreview.github.com/?https://github.com/pendragon-andyh/WebAudio-PulseOscillator/blob/master/example-pwn.html)
+* [Example-synth.html](http://htmlpreview.github.com/?https://github.com/pendragon-andyh/WebAudio-PulseOscillator/blob/master/example-synth.html)
 
 Have a play - then feel free to incorporate these techniques in your own code.
 
