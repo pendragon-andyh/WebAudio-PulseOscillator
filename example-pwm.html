@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="en" >
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pulse wave example</title>
+    
+    <link rel="Stylesheet" href="3rd-party/bootstrap-3.1.1-dist/css/bootstrap.min.css" />
+    <link rel="Stylesheet" href="3rd-party/bootstrap-3.1.1-dist/css/bootstrap-theme.min.css" />
+    <link rel="Stylesheet" href="assets/styles.css" />
+
+    <script type="text/javascript" src="3rd-party/jquery/jquery-2.1.0.min.js"></script>
+    <script type="text/javascript" src="3rd-party/bootstrap-3.1.1-dist/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="jumbotron">
+		<div class="container">
+			<h1>Pulse Wave Example</h1>
+			<p>Analogue synths often contained the option to use a pulse-width-modulated waveform. This is like a square-wave,
+			but where you can modulate the mark-space-ratio of the waveform.</p>
+			<p>
+			<button id="btn-play" class="btn btn-success">Play</button>
+			</p>
+			<p>GitHub - <a href="//github.com/pendragon-andyh/web-audio-pulse-oscillator">//github.com/pendragon-andyh/web-audio-pulse-oscillator</a></p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		$(function() {
+			var ac=new (
+				window.AudioContext||
+				window.webkitAudioContext||
+				function() { throw "Browser does not support Web Audio API"; }
+			)();
+
+			//Pre-calculate the WaveShaper curves so that we can reuse them.
+			var pulseCurve=new Float32Array(256);
+			for(var i=0;i<128;i++) {
+				pulseCurve[i]= -1;
+				pulseCurve[i+128]=1;
+			}
+			var constantOneCurve=new Float32Array(2);
+			constantOneCurve[0]=1;
+			constantOneCurve[1]=1;
+
+			ac.createPulseOscillator=function() {
+				//Use a normal oscillator as the basis of our new oscillator.
+				var node=this.createOscillator();
+				node.type="sawtooth";
+
+				//Shape the output into a pulse wave.
+				var pulseShaper=ac.createWaveShaper();
+				pulseShaper.curve=pulseCurve;
+				node.connect(pulseShaper);
+
+				//Use a GainNode as our new "width" audio parameter.
+				var widthGain=ac.createGain();
+				widthGain.gain.value=0; //Default width.
+				node.width=widthGain.gain; //Add parameter to oscillator node.
+				widthGain.connect(pulseShaper);
+
+				//Pass a constant value of 1 into the widthGain – so the "width" setting is
+				//duplicated to its output.
+				var constantOneShaper=this.createWaveShaper();
+				constantOneShaper.curve=constantOneCurve;
+				node.connect(constantOneShaper);
+				constantOneShaper.connect(widthGain);
+
+				//Override the oscillator's "connect" method so that the new node's output
+				//actually comes from the pulseShaper.
+				node.connect=function() {
+					pulseShaper.connect.apply(pulseShaper, arguments);
+					return node;
+				}
+
+				//Override the oscillator's "disconnect" method.
+				node.disconnect=function() {
+					pulseShaper.disconnect.apply(pulseShaper, arguments);
+					return node;
+				}
+
+				return node;
+			};
+
+			//Play the note.
+			var currentNote=null;
+			$("#btn-play").on("click", function() {
+				//Create the new oscillator.
+				var pulseOsc=ac.createPulseOscillator();
+				pulseOsc.frequency.value=220;
+
+				//The pulse-width will start at 0.4 and finish at 0.1.
+				pulseOsc.width.value=0.4; //The initial pulse-width.
+				pulseOsc.width.exponentialRampToValueAtTime(0.1, ac.currentTime+2);
+
+				//Add a low frequency oscillator to modulate the pulse-width.
+				var lfo=ac.createOscillator();
+				lfo.type="triangle";
+				lfo.frequency.value=10;
+				var lfoDepth=ac.createGain();
+				lfoDepth.gain.value=0.1;
+				lfoDepth.gain.exponentialRampToValueAtTime(0.05, ac.currentTime+0.5);
+				lfoDepth.gain.exponentialRampToValueAtTime(0.15, ac.currentTime+2);
+				lfo.connect(lfoDepth);
+				lfoDepth.connect(pulseOsc.width);
+
+				lfo.start(ac.currentTime);
+				lfo.stop(ac.currentTime+2);
+
+				var filter=ac.createBiquadFilter();
+				filter.type="lowpass";
+				filter.frequency.value=16000;
+				filter.frequency.exponentialRampToValueAtTime(440, ac.currentTime+2);
+
+				pulseOsc.connect(filter);
+				filter.connect(ac.destination);
+				
+				pulseOsc.start(ac.currentTime);
+				pulseOsc.stop(ac.currentTime+2);
+			});
+		});
+	</script>
+</body>
+</html>

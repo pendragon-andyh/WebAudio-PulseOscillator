@@ -1,0 +1,400 @@
+﻿<!DOCTYPE html>
+<html lang="en" >
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pulse wave example</title>
+    
+    <link rel="Stylesheet" href="3rd-party/bootstrap-3.1.1-dist/css/bootstrap.min.css" />
+    <link rel="Stylesheet" href="3rd-party/bootstrap-3.1.1-dist/css/bootstrap-theme.min.css" />
+    <link rel="Stylesheet" href="assets/styles.css" />
+
+    <script type="text/javascript" src="3rd-party/jquery/jquery-2.1.0.min.js"></script>
+    <script type="text/javascript" src="3rd-party/bootstrap-3.1.1-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/utils.js"></script>
+</head>
+<body>
+	<div class="jumbotron">
+		<div class="container">
+			<h1>Pulse Wave Example</h1>
+			<p>Analogue synths often contained the option to use a pulse-width-modulated waveform. This is like a square-wave,
+			but where you can modulate the mark-space-ratio of the waveform.</p>
+			<p>GitHub - <a href="//github.com/pendragon-andyh/web-audio-pulse-oscillator">//github.com/pendragon-andyh/web-audio-pulse-oscillator</a></p>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6" id="synthControls">
+				<div class="panel panel-default" id="lfoPanel">
+					<div class="panel-heading">
+						<strong>LFO</strong>
+					</div>
+					<div class="panel-body">
+						<div class="panel-control">
+							<label for="filterType">Type</label>
+							<select id="lfoType" class="form-control" title="Waveform">
+								<option value="sine">Sine</option>
+								<option selected="selected" value="triangle">Triangle</option>
+								<option value="sawtooth">Sawtooth</option>
+								<option value="square">Square</option>
+							</select>
+						</div>
+						<div class="panel-control">
+							<label for="lfoFrequency">Frequency</label>
+							<input type="range" id="lfoFrequency" min="1" max="1000" value="100" data-multiplier="10" title="Frequency of the note (Hz)" />
+							<div class="panel-subcontrol">
+								<label for="lfoSweep">Sweep</label>
+								<input type="range" id="lfoSweep" min="-100" max="100" value="0" data-multiplier="100" title="Pitch modulation depth (percent)" />
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<button id="btn-play" class="pull-right btn btn-success btn-xs">Play</button>
+						<strong>Oscillator</strong>
+					</div>
+					<div class="panel-body">
+						<div class="panel-control">
+							<label for="oscFrequency">Frequency</label>
+							<input type="range" id="oscFrequency" min="55" max="888" value="110" title="Frequency of the note (Hz)" />
+							<div class="panel-subcontrol">
+								<label for="oscDetuneSweep">Sweep</label>
+								<input type="range" id="oscDetuneSweep" min="-100" max="100" value="0" data-multiplier="100" title="Pitch modulation depth (percent)" />
+							</div>
+							<div class="panel-subcontrol">
+								<label for="oscDetuneDepth">LFO depth</label>
+								<input type="range" id="oscDetuneDepth" min="-100" max="100" value="0" data-multiplier="100" title="Pitch modulation depth (percent)" />
+							</div>
+							<div class="panel-subcontrol">
+								<label for="oscDetuneAttack">Attack</label>
+								<input type="range" id="oscDetuneAttack" min="0" max="100" value="5" data-multiplier="100" title="modulation depth - attack time" />
+							</div>
+							<div class="panel-subcontrol">
+								<label for="oscDetuneDecay">Decay</label>
+								<input type="range" id="oscDetuneDecay" min="0" max="100" value="40" data-multiplier="100" title="modulation depth - decay time" />
+							</div>
+							<div class="panel-subcontrol">
+								<label for="oscDetuneSustain">Sustain</label>
+								<input type="range" id="oscDetuneSustain" min="0" max="100" value="40" data-multiplier="100" title="modulation depth - sustain level" />
+							</div>
+							<div class="panel-subcontrol">
+								<label for="oscDetuneRelease">Release</label>
+								<input type="range" id="oscDetuneRelease" min="0" max="100" value="40" data-multiplier="100" title="modulation depth - release time" />
+							</div>
+						</div>
+						<div class="panel-control">
+							<label for="oscWidth">Width</label>
+							<input type="range" id="oscWidth" min="-100" max="100" value="0" data-multiplier="100" title="Ratio of the waveform's mark-space" />
+							<div class="panel-subcontrol">
+								<label for="oscWidthSweep">Sweep</label>
+								<input type="range" id="oscWidthSweep" min="-100" max="100" value="0" data-multiplier="100" title="Pitch modulation depth (percent)" />
+							</div>
+							<div class="panel-subcontrol">
+								<label for="oscWidthDepth">LFO depth</label>
+								<input type="range" id="oscWidthDepth" min="-100" max="100" value="0" data-multiplier="100" title="Pulse width modulation depth (percent)" />
+							</div>
+							<div class="panel-subcontrol">
+								<label for="oscWidthAttack">Attack</label>
+								<input type="range" id="oscWidthAttack" min="0" max="100" value="5" data-multiplier="100" title="modulation depth - attack time" />
+							</div>
+							<div class="panel-subcontrol">
+								<label for="oscWidthDecay">Decay</label>
+								<input type="range" id="oscWidthDecay" min="0" max="100" value="40" data-multiplier="100" title="modulation depth - decay time" />
+							</div>
+							<div class="panel-subcontrol">
+								<label for="oscWidthSustain">Sustain</label>
+								<input type="range" id="oscWidthSustain" min="0" max="100" value="40" data-multiplier="100" title="modulation depth - sustain level" />
+							</div>
+							<div class="panel-subcontrol">
+								<label for="oscWidthRelease">Release</label>
+								<input type="range" id="oscWidthRelease" min="0" max="100" value="40" data-multiplier="100" title="modulation depth - release time" />
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="panel panel-default">
+					<div class="panel-heading"><strong>Filter</strong></div>
+					<div class="panel-body">
+						<div class="panel-control">
+							<label for="filterType">Type</label>
+							<select id="filterType" class="form-control" title="Type of filter">
+								<option selected="selected" value="lowpass">Lowpass</option>
+								<option value="bandpass">Bandpass</option>
+								<option value="highpass">Highpass</option>
+								<option value="notch">Notch (band-reject)</option>
+								<option value="allpass">Allpass</option>
+							</select>
+						</div>
+						<div class="panel-control">
+							<label for="filterCutoff">Cutoff</label>
+							<input type="range" id="filterCutoff" min="0" max="1000" value="1000" data-multiplier="10" title="Cutoff level" />
+						</div>
+						<div class="panel-control">
+							<label for="filterQ">Q</label>
+							<input type="range" id="filterQ" min="1" max="10000" value="1000" data-multiplier="1000" title="Q factor" />
+						</div>
+					</div>
+				</div>
+				
+				<div class="panel panel-default">
+					<div class="panel-heading"><strong>Amplitude</strong></div>
+					<div class="panel-body">
+						<div class="panel-control">
+							<label for="ampGain">Gain</label>
+							<input type="range" id="ampGain" min="0" max="100" value="100" data-multiplier="100" />
+							<div class="panel-subcontrol">
+								<label for="ampAttack">Attack</label>
+								<input type="range" id="ampAttack" min="0" max="100" value="5" data-multiplier="100" title="modulation depth - attack time" />
+							</div>
+							<div class="panel-subcontrol">
+								<label for="ampDecay">Decay</label>
+								<input type="range" id="ampDecay" min="0" max="100" value="40" data-multiplier="100" title="modulation depth - decay time" />
+							</div>
+							<div class="panel-subcontrol">
+								<label for="ampSustain">Sustain</label>
+								<input type="range" id="ampSustain" min="0" max="100" value="40" data-multiplier="100" title="modulation depth - sustain level" />
+							</div>
+							<div class="panel-subcontrol">
+								<label for="ampRelease">Release</label>
+								<input type="range" id="ampRelease" min="0" max="100" value="40" data-multiplier="100" title="modulation depth - release time" />
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-md-6">
+				<div class="panel panel-default">
+					<div class="panel-heading"><strong>Analysis</strong></div>
+					<div class="panel-body">
+						<div class="panel-control">
+							<label for="analysis-spectrum">Spectrum</label>
+							<canvas id="analysis-spectrum" width="500" height="222"></canvas>
+						</div>
+						<div class="panel-control">
+							<label for="analysis-waveform">Waveform</label>
+							<canvas id="analysis-waveform" width="500" height="222"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+		$(function() {
+			var ac=new (
+				window.AudioContext||
+				window.webkitAudioContext||
+				function() { throw "Browser does not support Web Audio API"; }
+			)();
+
+			//Pre-calculate the WaveShaper curves so that we can reuse them.
+			var pulseCurve=new Float32Array(256);
+			for(var i=0;i<128;i++) {
+				pulseCurve[i]= -1;
+				pulseCurve[i+128]=1;
+			}
+			var constantOneCurve=new Float32Array(2);
+			constantOneCurve[0]=1;
+			constantOneCurve[1]=1;
+
+			ac.createPulseOscillator=function() {
+				//Use a normal oscillator as the basis of our new oscillator.
+				var node=this.createOscillator();
+				node.type="sawtooth";
+
+				//Shape the output into a pulse wave.
+				var pulseShaper=ac.createWaveShaper();
+				pulseShaper.curve=pulseCurve;
+				node.connect(pulseShaper);
+
+				//Use a GainNode as our new "width" audio parameter.
+				var widthGain=ac.createGain();
+				widthGain.gain.value=0; //Default width.
+				node.width=widthGain.gain; //Add parameter to oscillator node.
+				widthGain.connect(pulseShaper);
+
+				//Pass a constant value of 1 into the widthGain – so the "width" setting is
+				//duplicated to its output.
+				var constantOneShaper=this.createWaveShaper();
+				constantOneShaper.curve=constantOneCurve;
+				node.connect(constantOneShaper);
+				constantOneShaper.connect(widthGain);
+
+				//Override the oscillator's "connect" method so that the new node's output
+				//actually comes from the pulseShaper.
+				node.connect=function() {
+					pulseShaper.connect.apply(pulseShaper, arguments);
+					return node;
+				}
+
+				//Override the oscillator's "disconnect" method.
+				node.disconnect=function() {
+					pulseShaper.disconnect.apply(pulseShaper, arguments);
+					return node;
+				}
+
+				return node;
+			};
+
+			//Create the analyser.
+			var analyser=ac.createAnalyser({ fftSize: 1024, minDecibels: -100, maxDecibels: 0, smoothingTimeConstant: 0 });
+			analyser.connect(ac.destination);
+
+			//Wire-up the controls for a synth's settings panel.
+			//The note will automatically play when you fiddle with the controls.
+			setupSynthControls($("#synthControls"), function() {
+				var osc=createNote(analyser);
+				osc.noteOn(ac.currentTime);
+				osc.noteOff(ac.currentTime+0.5);
+			}, true);
+
+			//Play the note.
+			var currentNote=null;
+			$("#btn-play")
+				.on("mousedown touchstart", function() {
+					if(currentNote) {
+						currentNote.noteOff(ac.currentTime);
+					}
+					currentNote=createNote(analyser);
+					currentNote.noteOn(ac.currentTime);
+				})
+				.on("mouseleave mouseup touchend touchcancel", function() {
+					if(currentNote) {
+						currentNote.noteOff(ac.currentTime+0.2);
+						currentNote=null;
+					}
+				});
+
+			//Render the analyser to the screen.
+			var canvasSpectrum=document.getElementById("analysis-spectrum");
+			var canvasWaveform=document.getElementById("analysis-waveform");
+			function scheduleAnalysis() {
+				renderAnalysis(canvasSpectrum, canvasWaveform, analyser);
+				requestAnimFrame(scheduleAnalysis, document);
+			}
+			scheduleAnalysis();
+
+			//Function that plays the note.
+			function createNote(dest) {
+				var settings={
+					lfoType: $("#lfoType").val(),
+					lfoFrequency: $("#lfoFrequency").next("input[type=text]").val()-0,
+					lfoSweep: $("#lfoSweep").next("input[type=text]").val()-0,
+					oscFrequency: $("#oscFrequency").next("input[type=text]").val()-0,
+					oscDetuneSweep: $("#oscDetuneSweep").next("input[type=text]").val()-0,
+					oscDetuneDepth: $("#oscDetuneDepth").next("input[type=text]").val()-0,
+					oscDetuneAttack: $("#oscDetuneAttack").next("input[type=text]").val()-0,
+					oscDetuneDecay: $("#oscDetuneDecay").next("input[type=text]").val()-0,
+					oscDetuneSustain: $("#oscDetuneSustain").next("input[type=text]").val()-0,
+					oscDetuneRelease: $("#oscDetuneRelease").next("input[type=text]").val()-0,
+					oscWidth: $("#oscWidth").next("input[type=text]").val()-0,
+					oscWidthSweep: $("#oscWidthSweep").next("input[type=text]").val()-0,
+					oscWidthDepth: $("#oscWidthDepth").next("input[type=text]").val()-0,
+					oscWidthAttack: $("#oscWidthAttack").next("input[type=text]").val()-0,
+					oscWidthDecay: $("#oscWidthDecay").next("input[type=text]").val()-0,
+					oscWidthSustain: $("#oscWidthSustain").next("input[type=text]").val()-0,
+					oscWidthRelease: $("#oscWidthRelease").next("input[type=text]").val()-0,
+					filterType: $("#filterType").val(),
+					filterCutoff: $("#filterCutoff").next("input[type=text]").val()-0,
+					filterQ: $("#filterQ").next("input[type=text]").val()-0,
+					ampGain: $("#ampGain").next("input[type=text]").val()-0,
+					ampAttack: $("#ampAttack").next("input[type=text]").val()-0,
+					ampDecay: $("#ampDecay").next("input[type=text]").val()-0,
+					ampSustain: $("#ampSustain").next("input[type=text]").val()-0,
+					ampRelease: $("#ampRelease").next("input[type=text]").val()-0
+				};
+
+				var amp=ac.createGain();
+				amp.gain.value=0;
+				amp.connect(dest);
+
+				/*
+				var filter=ac.createBiquadFilter();
+				filter.type=settings.filterType;
+				filter.frequency.value=settings.oscFrequency;
+				filter.detune.value=settings.oscDetune;
+				filter.Q.value=settings.filterQ;
+				filter.connect(amp);
+				*/
+
+				var osc=ac.createPulseOscillator();
+				osc.frequency.value=settings.oscFrequency;
+				osc.detune.value=0;
+				osc.width.value=settings.oscWidth;
+				osc.connect(amp);
+
+				var detuneDepth=ac.createGain();
+				detuneDepth.gain.value=0;
+				detuneDepth.connect(osc.detune);
+
+				var widthDepth=ac.createGain();
+				widthDepth.gain.value=0;
+				widthDepth.connect(osc.width);
+
+				var lfo=ac.createOscillator();
+				lfo.type=settings.lfoType;
+				lfo.frequency.value=settings.lfoFrequency;
+				lfo.connect(detuneDepth);
+				lfo.connect(widthDepth);
+
+				return {
+					detuneDepthSustainTime: null,
+					widthDepthSustainTime: null,
+					ampSustainTime: null,
+					noteOn: function(startTime) {
+						startTime=startTime||ac.currentTime;
+
+						//Start the oscillators.
+						osc.start(startTime);
+						lfo.start(startTime);
+
+						//Automate the attack, release and sustain portions of the envelopes.
+						this.detuneDepthSustainTime=startTime+settings.oscDetuneAttack+settings.oscDetuneRelease;
+						detuneDepth.gain.linearRampToValueAtTime(1200*settings.oscDetuneDepth, startTime+settings.oscDetuneAttack);
+						detuneDepth.gain.linearRampToValueAtTime(1200*settings.oscDetuneDepth*settings.oscDetuneSustain,
+							this.detuneDepthSustainTime);
+
+						this.widthDepthSustainTime=startTime+settings.oscWidthAttack+settings.oscWidthRelease;
+						widthDepth.gain.linearRampToValueAtTime(0.5*settings.oscWidthDepth, startTime+settings.oscWidthAttack);
+						widthDepth.gain.linearRampToValueAtTime(0.5*settings.oscWidthDepth*settings.oscWidthSustain,
+							this.widthDepthSustainTime);
+
+						this.ampSustainTime=startTime+settings.ampAttack+settings.ampRelease;
+						amp.gain.linearRampToValueAtTime(settings.ampGain, startTime+settings.ampAttack);
+						amp.gain.linearRampToValueAtTime(settings.ampGain*settings.ampSustain, this.ampSustainTime);
+
+						//Automate sweep.
+						var sweepEndTime=this.ampSustainTime+settings.ampRelease;
+						var targetValue=4800*settings.lfoSweep;
+						lfo.detune.linearRampToValueAtTime(targetValue, sweepEndTime);
+						targetValue=1200*settings.oscDetuneSweep;
+						osc.detune.linearRampToValueAtTime(targetValue, sweepEndTime);
+						targetValue=settings.oscWidthSweep;
+						osc.width.linearRampToValueAtTime(targetValue, sweepEndTime);
+					},
+					noteOff: function(releaseTime) {
+						releaseTime=releaseTime||ac.currentTime;
+
+						//Stop the oscillators.
+						var stopTime=Math.max(releaseTime, this.ampSustainTime)+settings.ampRelease;
+						osc.stop(stopTime);
+						lfo.stop(stopTime);
+
+						//Automate the release portion of the envelopes.
+						detuneDepth.gain.linearRampToValueAtTime(0, Math.max(releaseTime, this.detuneDepthSustainTime)+settings.oscDetuneRelease);
+						widthDepth.gain.linearRampToValueAtTime(0, Math.max(releaseTime, this.widthDepthSustainTime)+settings.oscWidthRelease);
+						amp.gain.linearRampToValueAtTime(0, stopTime);
+					}
+				};
+			}
+		});
+	</script>
+</body>
+</html>

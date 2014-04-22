@@ -1,0 +1,15 @@
+﻿.jumbotron {margin-bottom:20px;padding-top:28px;padding-bottom:30px;}
+.panel-control {position:relative;border-bottom:dotted 1px #ccf;}
+.panel-control:first-child {border-top:dotted 1px #ccf;}
+.panel {max-width:550px;}
+.panel-control label {width:20%;display:inline-block;}
+.panel-control input[type=range] {width:40%;display:inline-block;position:relative;top:6px;}
+.panel-control input[type=text] {width:15%;display:inline-block;margin-left:10px;margin-right:10px;height:25px;}
+.panel-control select {display:inline-block;width: 200px;margin:3px 0;padding: 0 2px 0 2px;height: 25px;}
+canvas#analysis-spectrum {width:100%;}
+canvas#analysis-waveform {width:100%;}
+
+.panel-subcontrol {padding-left:4%;}
+.panel-subcontrol label {width:20%;}
+.panel-subcontrol input[type=range] {width:43%;}
+.panel-subcontrol input[type=text] {width:14%;}
