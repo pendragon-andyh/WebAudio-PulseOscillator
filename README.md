@@ -87,7 +87,8 @@ The WaveShaper node will transform this into an output where a quarter of the ou
 ![PulseWaveFigure5.gif](./assets/PulseWaveFigure5.gif "Figure 5: Pulse wave when the offset is 0.5")
 
 This is cool, but the resulting sound is a bit static.  It would be better if we use an AudioParam to modulate the pulse-width.
-Adding modulation of the pulse width
+
+##Adding modulation of the pulse width
 The Web Audio API doesn’t allow you to create AudioParam object directly … so we’re going to be devious again – and borrow an AudioParam from the GainNode.
 
 The following code adds a new "createPulseOscillator" function to the AudioContext – and exposes a "width" parameter that can be modulated:
