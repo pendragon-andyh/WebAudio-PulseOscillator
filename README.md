@@ -66,6 +66,7 @@ sawtoothOsc.stop(ac.currentTime + 2);
 ```
 
 This uses a symmetrical curve to produce the waveform in figure 4.  Half of the sawtooth wave is below 0 – and so translates to a value of -1.  Half is above 0 – and so translates to +1.
+
 ![PulseWaveFigure4.gif](./assets/PulseWaveFigure4.gif "Figure 4: Square wave (produced from shaped sawtooth)")
 
 To get a pulse wave, we need to add apply an offset to the sawtooth (so that it rises from -0.5 to +1.5).  There are 2 ways of easily creating a constant offset value using the Web Audio API:
