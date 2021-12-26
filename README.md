@@ -43,8 +43,8 @@ Now lets add a `WaveShaper` node to transform the sawtooth into a square wave:
 
     // create new curve that will transform values [0:127] to -1 and [128:255] to +1
     const squareCurve = new Float32Array(256); 
-    squareCurve.fill(-1, 0, 127);
-    squareCurve.fill(1, 128, 255);
+    squareCurve.fill(-1, 0, 128);
+    squareCurve.fill(1, 128, 256);
 
     const sawtooth = new OscillatorNode(audioContext, { type: "sawtooth", frequency: 110 });
     const squareShaper = new WaveShaperNode(audioContext, { curve: squareCurve });
@@ -66,9 +66,10 @@ To get a pulse wave however, sawtooth wave need an offset so that its duty-cycle
 ### Creating offset node 
 Adding constant signal of amplitude `x` will offset any wave by this value.
  
-There are 2 ways of creating a constant offset value using the Web Audio API:
+There are 3 ways of creating a constant offset value using the Web Audio API:
 * create an `AudioBufferSource` where the `AudioBuffer` only contains the value that we want
 * create another `WaveShaper` node that shapes all of its input values to the desired constant value
+* create an `ConstantSourceNode`
 
 In this case, it is more convenient to use the `WaveShaper` node:
 ```javascript
@@ -111,8 +112,8 @@ Just like previously signal need to be transform by `WaveShaper` node:
 
     // create new curve that will transform values [0:127] to -1 and [128:255] to +1
     const squareCurve = new Float32Array(256); 
-    squareCurve.fill(-1, 0, 127);
-    squareCurve.fill(1, 128, 255);
+    squareCurve.fill(-1, 0, 128);
+    squareCurve.fill(1, 128, 256);
 
     // creating curve with constant amplitude of value   
     const constantCurve = (value) => {
@@ -157,8 +158,8 @@ let audioContext = new (window.AudioContext ||
 
 // create new curve that will flatten values [0:127] to -1 and [128:255] to 1
 const squareCurve = new Float32Array(256);
-squareCurve.fill(-1, 0, 127);
-squareCurve.fill(1, 128, 255);
+squareCurve.fill(-1, 0, 128);
+squareCurve.fill(1, 128, 256);
 
 // constant signal on level 1
 const constantCurve = new Float32Array(2);
